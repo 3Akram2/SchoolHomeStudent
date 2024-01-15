@@ -1,5 +1,4 @@
 import { Grid, Paper, Typography,TextField,Button } from '@mui/material';
-
 import FacebookOutlinedIcon from '@mui/icons-material/FacebookOutlined';
 import InputAdornment from '@mui/material/InputAdornment';
 import OutlinedInput from '@mui/material/OutlinedInput';
@@ -17,7 +16,7 @@ import Divider from '@mui/material/Divider';
 
 import { Box } from '@mui/system'
 import React,{ useState } from 'react';
-
+import { Link } from "react-router-dom";
 
 
 function RegisterForm() {
@@ -230,6 +229,11 @@ const [showPassword,setShowPassword] = useState(false);
       )}
 
       </Grid>
+      <Grid container justifyContent="center" alignItems="center"  >
+      <Grid item xs={8} >
+      <Button variant="outlined" sx={{width:'100%',backgroundColor:'white',marginTop:'10px'}}>Login</Button>
+      </Grid>
+      </Grid>
       <Grid item xs={12}>
      <Divider  sx={{
             margin:'auto',
@@ -257,7 +261,7 @@ const [showPassword,setShowPassword] = useState(false);
           </Grid>
           </Grid>
           <Grid item xs={12}>
-            <Typography style={{color:'white',textAlign:'center',fontSize:'12px',marginTop:'10px'}} > Already a Member? <span onClick={(e)=>console.log(e)} style={{color:'#B59351',cursor:'pointer'}}>Login</span></Typography>
+            <Typography style={{color:'white',textAlign:'center',fontSize:'12px',marginTop:'10px'}} > Already a Member? <Link style={{color:'#B59351'}} to='/login'>Log in</Link></Typography>
           </Grid>
           
      

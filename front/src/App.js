@@ -5,6 +5,7 @@ import Footer from './components/Footer';
 import { createTheme,ThemeProvider } from '@mui/material';
 import HomePage from './pages/HomePage';
 import SignUp from './pages/SignUp';
+import LoginPage from './pages/LoginPage';
 
 const theme = createTheme({
   palette:{
@@ -27,6 +28,7 @@ function App() {
         <Routes>
         <Route path="/" element={<HomePage/>} />
         <Route path="/signup" element={<SignUp/>} />
+        <Route path="/login" element={<LoginPage/>} />
         
         </Routes>
         <Footer/>
