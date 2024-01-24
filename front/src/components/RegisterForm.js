@@ -12,13 +12,15 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 // eslint-disable-next-line
 import Divider from '@mui/material/Divider';
-
+import {useDispatch,useSelector} from 'react-redux';
 
 import { Box } from '@mui/system'
-import React,{ useState } from 'react';
-import { Link } from "react-router-dom";
-
-
+import React,{ useState,useEffect } from 'react';
+import { Link,useNavigate } from "react-router-dom";
+import {auth,googleProvider} from '../config/firebase';
+import { createUserWithEmailAndPassword,signInWithPopup } from 'firebase/auth'
+import { registerUserWithGoogle,registerUserWithEmailPass } from '../axios/requests';
+import { setCredentials } from '../slices/authSlice';
 function RegisterForm() {
   const [Fname, setFname] = useState('');
   const [Lname, setLname] = useState('');
@@ -28,13 +30,23 @@ function RegisterForm() {
   const [phoneError, setPhoneError] = useState(false);
 
   const [date, setDate] = useState(dayjs('2000-01-01'));
-  const [isValidDate, setIsValidDate] = useState(true);
+  const [dateError, setDateError] = useState(false);
   const currentYearMinusThree = new Date().getFullYear() - 3;
 
 const [password, setPassword] = useState('');
 const [confirmPassword, setConfirmPassword] = useState('');
 const [PassError, setPasswordError] = useState(false);
 const [showPassword,setShowPassword] = useState(false);
+
+
+ const navigate = useNavigate();
+ const dispatch = useDispatch();
+ const {userInfo} = useSelector((state)=> state.auth);
+ useEffect(()=>{
+  if(userInfo){
+    navigate('/')
+  }
+ },[navigate,userInfo])
 
   const handleFnameChange = (e) => {
     const newFname = e.target.value;
@@ -58,7 +70,7 @@ const [showPassword,setShowPassword] = useState(false);
   };
   const handleDateChange = (newDate) => {
     const isValid = dayjs(newDate).year() <= currentYearMinusThree;
-    setIsValidDate(isValid);
+    setDateError(!isValid);
     
     setDate(newDate);
   };
@@ -86,6 +98,75 @@ const [showPassword,setShowPassword] = useState(false);
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     setEmailError(!emailRegex.test(email));
   };
+  const clearForm = () => {
+    setFname('');
+    setLname('');
+    setEmail('');
+    setPhone('');
+    setPassword('');
+    setConfirmPassword('');
+    setDate(dayjs('2000-01-01'));
+
+    }
+
+  const register = async () => {
+   
+    // Check if required fields are empty
+    if (!Fname || !Lname || !email || !phone ||  !password || !confirmPassword ||  date.format('YYYY-MM-DD') === '2000-01-01') {
+      // Show an alert for empty required fields
+      alert('All required fields must be filled.');
+      return;
+    }
+  
+    // Perform validation checks
+    if (emailError || PassError || phoneError || dateError) {
+      // Show an alert for validation errors
+      alert('Validation failed. Please check the form for errors.');
+      return;
+    }
+  
+    try {
+      const newUser={
+        fName:Fname,
+        lName:Lname,
+        email:email,
+        birthDate:date,
+        phoneNumber:phone,
+      }
+      // Attempt to create user if validation passes
+      const emailAndPassUser = await createUserWithEmailAndPassword(auth, email, password);
+      // Additional logic or actions after successful registration
+     
+      const res = await registerUserWithEmailPass(await emailAndPassUser.user.getIdToken(),newUser)
+      dispatch(setCredentials({...res.data.user}))
+    
+      console.log('User registered successfully:', await emailAndPassUser.user.getIdToken());
+      clearForm();
+      alert('registered successfully!');
+    
+      
+    } catch (error) {
+      // Handle registration errors
+      alert(`Error registering user: ${error.message}`);
+      console.error('Error registering user:', error.message);
+      // You can display an error message to the user if needed
+    }
+  };
+  
+   const signInWithGoole= async () =>{
+    try {
+      const googleUser = await signInWithPopup(auth,googleProvider)    
+      console.log(googleUser.user);
+     const res =  await registerUserWithGoogle(await googleUser.user.getIdToken());
+      dispatch(setCredentials({...res.data.user}))
+    
+    
+    } catch (error) {
+      console.log(error)
+    }
+    
+  
+   }
   return (
     <Box sx={{marginTop:'20px'}}>
     <Paper sx={{backgroundColor:'common.black',marginTop:'20px', width:'60%',margin:'auto',padding:'10px'}}>
@@ -142,9 +223,14 @@ const [showPassword,setShowPassword] = useState(false);
         onChange={handleEmailChange}
         onBlur={handleBlur}
         error={emailError}
-        helperText={emailError ? 'Invalid email address' : ''}
+        
         
          />
+         { emailError && (
+        <Typography variant="caption" color="error" sx={{display:'block'}}>
+         Invalid email address
+        </Typography>
+      )}
       </Grid>
       <Grid item xs={12} >
       <Typography className='label'>Phone Number</Typography>
@@ -158,9 +244,14 @@ const [showPassword,setShowPassword] = useState(false);
         value={phone}
         onChange={handlePhoneChange}
         error={phoneError}
-        helperText={phoneError ? 'Invalid phone Number' : ''}
+        
         
          />
+        { phoneError && (
+        <Typography variant="caption" color="error" sx={{display:'block'}}>
+         enter valid phone number (10 numbers )
+        </Typography>
+      )}
       </Grid>
       <Grid item xs={12} >
       <Typography className='label'>Date of Birth</Typography>
@@ -172,7 +263,7 @@ const [showPassword,setShowPassword] = useState(false);
           
           maxDate={dayjs(`${currentYearMinusThree}-12-31`)}
         />
-     {!isValidDate && (
+     {dateError && (
         <Typography variant="caption" color="error" sx={{display:'block'}}>
           Choose a valid date (not newer than {currentYearMinusThree})
         </Typography>
@@ -220,18 +311,18 @@ const [showPassword,setShowPassword] = useState(false);
             onChange={handleConfirmPassChange}
             error={PassError}
             onBlur={handleConfPassBlur}
-            helperText={PassError ? 'Password does not match' : ''}
+            
           />
          {PassError && (
         <Typography variant="caption" color="error" sx={{display:'block'}}>
-          Password does not match
+          Password miss match!
         </Typography>
       )}
 
       </Grid>
       <Grid container justifyContent="center" alignItems="center"  >
       <Grid item xs={8} >
-      <Button variant="outlined" sx={{width:'100%',backgroundColor:'white',marginTop:'10px'}}>Login</Button>
+      <Button onClick={register} variant="outlined" sx={{width:'100%',backgroundColor:'white',marginTop:'10px'}}>Sign Up</Button>
       </Grid>
       </Grid>
       <Grid item xs={12}>
@@ -251,7 +342,7 @@ const [showPassword,setShowPassword] = useState(false);
           </Grid>
           <Grid container justifyContent="center" alignItems="center"  >
             <Grid item xs={8} md={4} >
-          <Button sx={{width:'100%'}} variant="filled" style={{backgroundColor:'white',marginTop:'10px'}} startIcon={<img src={require('../images/google.png')} alt='goole logo' style={{width:'24px'}} />}>Sign in with Google</Button>
+          <Button onClick={signInWithGoole} sx={{width:'100%'}} variant="filled" style={{backgroundColor:'white',marginTop:'10px'}} startIcon={<img src={require('../images/google.png')} alt='goole logo' style={{width:'24px'}} />}>Sign in with Google</Button>
           </Grid>
           </Grid>
 

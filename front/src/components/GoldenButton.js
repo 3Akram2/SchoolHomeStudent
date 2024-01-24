@@ -1,8 +1,12 @@
 import React from 'react'
 import { Button} from '@mui/material';
-function GoldenButton({text,size}) {
+function GoldenButton({text,size,func}) {
+  const handleClick = () => {
+    console.log('Button Clicked'); // Add this line for debugging
+    func(); // Call the provided function
+  };
   return (
-    <Button variant='contained'   sx={{color:"common.white", borderRadius:8,backgroundColor:"primary.main",width:"60%", fontSize:`${size}`,margin: '0 auto',display:"flex"}}> {text}</Button>
+    <Button onClick={handleClick} variant='contained'  sx={{color:"common.white", borderRadius:8,backgroundColor:"primary.main",width:"60%", fontSize:`${size}`,margin: '0 auto',display:"flex"}}> {text}</Button>
   )
 }
 

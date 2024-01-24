@@ -1,6 +1,8 @@
-import React from 'react'
-import { Grid, Paper, Typography } from '@mui/material';
+import React,{useState,useEffect} from 'react'
+import {useNavigate} from 'react-router-dom'
+import { Button, Grid, Paper, Typography } from '@mui/material';
 import { makeStyles } from '@mui/styles';
+import { useSelector } from 'react-redux';
 
 import ImageHolder from '../components/ImageHolder';
 import ServiceCard from '../components/ServiceCard';
@@ -11,6 +13,8 @@ import feedBackImage from "../images/HaveYourSay.png";
 import first from '../images/first.gif';
 import sec from '../images/sec.gif';
 import third from '../images/third.gif';
+import { updateProfile } from '../axios/requests';
+
 
 const useStyles = makeStyles((theme) => ({
     imgMargin: {
@@ -31,10 +35,30 @@ const useStyles = makeStyles((theme) => ({
   }));
 
 function HomePage() {
+  const {userInfo} = useSelector((state)=> state.auth);
+  const [logged,setlogged] = useState(false);
+  // useEffect(()=>{
+  //   if(userInfo)
+  //   setlogged(true)
+  // },[userInfo,setlogged])
+  
   
     const classes = useStyles();
-  return (
+    const navigate= useNavigate();
+    const goLogin=()=>{
+      console.log('sssssssssssssssssss')
+      navigate('/login')
+    } 
+    const goSignup=()=>{
+      navigate('/signup')
+    } 
+    const updateProf = async ()=>{
+     const res= await updateProfile();
+     console.log(res);
+    } 
+    return (
     <div style={{padding:"5px"}}>
+      <Button onClick={updateProf} > UpdateProfile </Button>
         <Grid container spacing={2} justifyContent={"center"}>
      <Grid item md={3} xs={12}>
       <img src={require("../images/image1.png")} alt={"school session"} style={{marginTop:"1rem" ,width:"100%"}} />
@@ -42,17 +66,20 @@ function HomePage() {
      <Grid item md={5} xs={12} sx={{justifyContent:"center",alignItems:"center",margin:'auto'}}>
       <p style={{fontSize:26,textAlign:"center"}}>Welcome to <span style={{color:"#B59351"}} >School Home Students Collaborate</span>,
         Empowering Your School Community Through Seamless Collaboration</p>
+        {userInfo? <p></p>: 
         <Paper sx={{backgroundColor:"secondary.main",width:"90%" ,padding:1,marginTop:1}} elevation={7}>
+         
          <p style={{fontSize:24 , textAlign:"center"}}> Join Us!</p>
          <Grid container>
           <Grid item xs={6}>
-          <GoldenButton text='Login' size='16px'/>
+          <GoldenButton func={goLogin} text='Login' size='16px'/>
           </Grid>
           <Grid item xs={6}>
-          <GoldenButton text='Sign UP' size='16px'/>
+          <GoldenButton func={goSignup} text='Sign UP' size='16px'/>
           </Grid>
          </Grid>
         </Paper>
+        }
      </Grid>
      <Grid item md={3} xs={12}>
       <img src={require("../images/image2.png")} alt={"school session"}  className={classes.imgMargin} style={{width:"100%"}} />
@@ -72,7 +99,7 @@ function HomePage() {
           <Typography variant='subtitle1' sx={{ color: "primary.main", fontWeight: "bold" }} > Services </Typography>
           <Typography variant='h4' sx={{ color: "common.white", fontWeight: "bolder" }} > What We Provide To You ? </Typography>
           <Typography variant='body2' sx={{ color: "common.white", maxWidth: "75%", marginBottom:1 }} > SHS Collaborate, we are committed to creating an environment where parents, teachers, and students come together to ensure a thriving educational journey. </Typography>
-          <GoldenButton text='View all services' size='12px'/>
+          <GoldenButton func={null} text='View all services' size='12px'/>
         </Grid>
 
         <Grid item md={3} xs={12}>

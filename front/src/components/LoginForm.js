@@ -1,5 +1,5 @@
-import React ,{useState}from 'react';
-import { Link } from "react-router-dom";
+import React ,{useState,useEffect}from 'react';
+import { Link,useNavigate } from "react-router-dom";
 import { Grid, Paper, Typography,TextField,Button,Box,Divider } from '@mui/material';
 import FacebookOutlinedIcon from '@mui/icons-material/FacebookOutlined';
 import InputAdornment from '@mui/material/InputAdornment';
@@ -8,6 +8,14 @@ import IconButton from '@mui/material/IconButton';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 
+import {  signInWithEmailAndPassword ,signInWithPopup} from 'firebase/auth';
+import {auth,googleProvider} from '../config/firebase';
+
+import {useDispatch,useSelector} from 'react-redux';
+// import { useLoginMutation } from '../slices/usersApiSlice';
+import {setCredentials} from '../slices/authSlice';
+import {logIn} from '../axios/requests';
+
 function LoginForm() {
     
     const [email, setEmail] = useState('');
@@ -15,6 +23,16 @@ function LoginForm() {
 
     const [password, setPassword] = useState('');
     const [showPassword,setShowPassword] = useState(false);
+
+    const dispatch = useDispatch();
+    const navigate= useNavigate();
+    
+    const {userInfo} = useSelector((state)=> state.auth);
+    useEffect(()=>{
+      if(userInfo){
+        navigate('/');
+      }
+    },[navigate,userInfo]);
 
     const handleEmailChange = (e) => {
         const newEmail = e.target.value;
@@ -34,6 +52,36 @@ function LoginForm() {
     
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     setEmailError(!emailRegex.test(email));
+  };
+  const handleLogin = async () => {
+    try {
+      const logUser = await signInWithEmailAndPassword(auth, email, password);
+      alert('User has been logged in successfully');
+      const token = await logUser.user.getIdToken();
+      console.log(token)
+      const res = await logIn(token);
+      dispatch(setCredentials({...res.data.user}))
+    
+
+      navigate('/')
+    } catch (error) {
+      alert('Error logging in:', error.message);
+    }
+  };
+  const handleSignInWithGoogle = async () => {
+    try {
+      const result = await signInWithPopup(auth, googleProvider);
+      const user = result.user;
+      const token = await result.user.getIdToken();
+      
+      const res = await logIn(token);
+      
+      dispatch(setCredentials({...res.data.user}))
+      navigate('/');
+     
+    } catch (error) {
+      console.error('Error signing in with Google:', error.message);
+    }
   };
   return (
     <Box sx={{marginTop:'20px'}}>
@@ -93,7 +141,7 @@ function LoginForm() {
       </Grid>
       <Grid container justifyContent="center" alignItems="center"  >
       <Grid item xs={8} >
-      <Button variant="outlined" sx={{width:'100%',backgroundColor:'white',marginTop:'10px'}}>Login</Button>
+      <Button variant="outlined" onClick={handleLogin} sx={{width:'100%',backgroundColor:'white',marginTop:'10px'}}>Login</Button>
       </Grid>
       </Grid>
       <Grid item xs={12}>
@@ -114,7 +162,7 @@ function LoginForm() {
 
           <Grid container justifyContent="center" alignItems="center"  >
             <Grid item xs={8} md={4} >
-          <Button sx={{width:'100%'}} variant="filled" style={{backgroundColor:'white',marginTop:'10px'}} startIcon={<img src={require('../images/google.png')} alt='goole logo' style={{width:'24px'}} />}>Log in with Google</Button>
+          <Button onClick={handleSignInWithGoogle} sx={{width:'100%'}} variant="filled" style={{backgroundColor:'white',marginTop:'10px'}} startIcon={<img src={require('../images/google.png')} alt='goole logo' style={{width:'24px'}} />}>Log in with Google</Button>
           </Grid>
           </Grid>
 
