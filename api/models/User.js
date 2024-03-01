@@ -1,4 +1,6 @@
 import mongoose from "mongoose";
+
+
 const userSchema = new mongoose.Schema({
     uid:{
         type:String,
@@ -11,13 +13,37 @@ const userSchema = new mongoose.Schema({
         unique: true,
         required:true,
     },
-    birthDate:Date,
     profilePicUrl:String,
     phoneNumber:{
         type: String,
         default:'',
-        
-    }
+    },
+    type:{
+        type:String,
+        required:true,
+        enum: ['student', 'parent', 'teacher','school'],
+    },
+    children: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+    }],
+    subjects: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Subject',
+    }],
+    parent:{
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'User',
+    },
+    role:{
+        type:String,
+        required:true,
+        enum: ['user', 'admin'],
+    },
+    teachers: [{
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'User',
+    }],    
     })
     const User = mongoose.model("User",userSchema);
     export default User;

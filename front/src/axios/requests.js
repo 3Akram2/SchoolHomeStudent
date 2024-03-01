@@ -1,5 +1,5 @@
 import axios from "axios";
-const API = axios.create({ baseURL : 'http://localhost:3002/'});
+const API = axios.create({ baseURL : 'http://localhost:3002/',withCredentials:true});
 export const registerUserWithGoogle = async (token) => await API.post('/auth/registerWithGoogle',null,{
     headers:{
         Authorization: `Bearer ${token}`,
@@ -14,10 +14,29 @@ export const logIn = async (token) => await API.post('/auth/login',null,{
     headers:{
         Authorization: `Bearer ${token}`,
     },
-    withCredentials: true,
+    
 })
 export const loggOut = async () => await API.post('/auth/logout',null)
 
-export const updateProfile = async () => await API.patch('/user/updateprofile',null)
+export const updateProfile = async ( user,file ) => {
+    const formData = new FormData();
+    Object.entries(user).forEach(([key, value]) => {
+        formData.append(key, value);
+      });
+      formData.append('file', file);
+    return  await API.patch('/user/updateprofile',formData,{
+    headers: {
+      'Content-Type': 'multipart/form-data'
+    }})}
+export const addChild = async (user) => await API.post('/user/addchild',user);
+export const viewProfile = async (userId) => await API.get(`/user/viewProfile/${userId}`);
+export const addTeacher = async (user) => await API.post('/user/addteacher',user);
 
+export const addSchool = async (user) => await API.post('/admin/addschool',user);
+export const getAllUsers = async () => await API.get('/admin/allusers');
 
+export const findSubjects = async () => await API.get('/subjects');
+export const addSubject = async (name, teacherId) => await API.post('/subject',{name,teacherId});
+export const deleteSubject = async (id) => await API.delete(`/subject/${id}`);
+export const editSubject = async (id,name) => await API.patch(`/subject/${id}`,{name,});
+export const joinSubject = async (subjectCode,subjectName) => await API.patch(`/subjects/join`,{subjectCode, subjectName});

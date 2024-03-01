@@ -1,0 +1,47 @@
+/* LoadingBook.css */
+
+.loading-book-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.loading-book {
+  width: 50px;
+  height: 80px;
+  position: relative;
+  perspective: 100px;
+}
+
+.cover {
+  background-color: black; /* Brownish red color */
+}
+
+.page1,
+.page2 {
+  position: absolute;
+  width: 50px;
+  height: 80px;
+  transform-origin: 0% 100%;
+  animation: openCloseBook 2s infinite alternate;
+  background-color: #B59351; /* White color for pages */
+  z-index: 1; /* Set a higher z-index for the pages */
+}
+
+.cover .text {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: black;
+  font-weight: bold;
+  font-size: 12px;
+  z-index: 2; /* Set a higher z-index for the text */
+}
+
+@keyframes openCloseBook {
+  to {
+    transform: rotateY(30deg);
+  }
+}

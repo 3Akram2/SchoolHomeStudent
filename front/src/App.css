@@ -47,4 +47,12 @@
 
  
  }
+ .profileFields{
  
+ font-weight:bolder;
+ color:#B59351;
+
+}
+.golden-progress-bar .Toastify__progress-bar {
+  background-color:#B59351;
+} 
