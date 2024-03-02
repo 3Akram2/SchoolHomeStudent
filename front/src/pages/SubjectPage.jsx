@@ -21,12 +21,19 @@ import {
 } from "../axios/requests";
 import DeleteDialoge from "../components/DeleteDialoge";
 import JoinSubject from "../components/subject/JoinSubject";
+import LoadingBook from "../components/LoadingBook";
+import { useNavigate } from "react-router-dom";
 function SubjectPage() {
+  const navigate = useNavigate();
   const { userInfo } = useSelector((state) => state.auth);
   const [subjects, setSubjects] = useState([]);
   const [showAddSubject, setShowAddSubject] = useState(false);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [subjectToDelete, setSubjectToDelete] = useState("");
+  const [loading, setLoading] = useState(true);
+  const handleOpenSubject = (id) =>{
+    navigate(`/subject/${id}`);
+  }
   const show = () => {
     setShowAddSubject(!showAddSubject);
   };
@@ -40,6 +47,9 @@ function SubjectPage() {
       } catch (error) {
         console.error(error);
         alert(error.response.data.msg);
+      }finally {
+        // Set loading to false regardless of success or error
+        setLoading(false);
       }
     };
     fetchSubjects();
@@ -90,7 +100,6 @@ function SubjectPage() {
   };
   const handleJoinSubject = async (code,name) => {
   try {
-    console.log(code,name);
     const response = await joinSubject(code,name);
     setSubjects([...subjects,response.data.subject])
     setShowAddSubject(false);
@@ -100,7 +109,9 @@ function SubjectPage() {
   }
 
   return (
+   
     <Grid container>
+       {loading? <Grid container justifyContent='center' alignItems='center' height='10vh'> <LoadingBook/> </Grid> : 
       <Grid container justifyContent="center">
         <Grid item md={2}>
           <Paper sx={{ backgroundColor: "primary.main" }}>
@@ -193,6 +204,7 @@ function SubjectPage() {
                               studentCount={subject.students.length}
                               deleteSubject={confirmDelete}
                               editSubject={handleEditSubject}
+                              open={handleOpenSubject}
                             />
                           </li>
                         ))}
@@ -233,12 +245,12 @@ function SubjectPage() {
           studentCount={subject.students.length}
           deleteSubject={confirmDelete}
           editSubject={handleEditSubject}
+          open={handleOpenSubject}
         />
       </li>
     ))
   )}
 </List>
-
           )}
           <DeleteDialoge
             open={deleteDialogOpen}
@@ -247,6 +259,7 @@ function SubjectPage() {
           />
         </Grid>
       </Grid>
+      }
     </Grid>
   );
 }

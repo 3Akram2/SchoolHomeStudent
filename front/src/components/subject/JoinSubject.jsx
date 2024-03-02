@@ -1,20 +1,18 @@
-import React, {useState} from 'react'
-import { Paper, Grid, TextField, Button} from '@mui/material'
-function JoinSubject({handleJoin}) {
-    const [name, setName] = useState("");
-    const [code, setCode] = useState("");
-    const join = () => {
-        if (!name || !code) {
-          return alert("Enter all fields");
-        }
-        const formattedName =
-          name.trim().charAt(0).toUpperCase() + name.trim().slice(1);
-        const formattedCode =
-          code.slice(0, 3).toUpperCase() + code.slice(3); 
-          handleJoin(formattedCode,formattedName);
-          setName("");
-          setCode("");
-      };
+import React, { useState } from "react";
+import { Paper, Grid, TextField, Button } from "@mui/material";
+function JoinSubject({ handleJoin }) {
+  const [name, setName] = useState("");
+  const [code, setCode] = useState("");
+  const join = () => {
+    if (!name || !code) {
+      return alert("Enter all fields");
+    }
+    const formattedName = name.trim().charAt(0).toUpperCase() + name.trim().slice(1);
+    const formattedCode = code.slice(0, 3).toUpperCase() + code.slice(3);
+    handleJoin(formattedCode, formattedName);
+    setName("");
+    setCode("");
+  };
   return (
     <Grid container justifyContent="center">
       <Paper
@@ -37,7 +35,7 @@ function JoinSubject({handleJoin}) {
             />
           </Grid>
           <Grid item md={7} xs={12}>
-          <TextField
+            <TextField
               required
               id="code"
               label="Subject Code"
@@ -62,7 +60,7 @@ function JoinSubject({handleJoin}) {
         </Grid>
       </Paper>
     </Grid>
-  )
+  );
 }
 
-export default JoinSubject
+export default JoinSubject;

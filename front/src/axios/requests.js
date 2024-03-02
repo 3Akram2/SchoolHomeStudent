@@ -40,3 +40,4 @@ export const addSubject = async (name, teacherId) => await API.post('/subject',{
 export const deleteSubject = async (id) => await API.delete(`/subject/${id}`);
 export const editSubject = async (id,name) => await API.patch(`/subject/${id}`,{name,});
 export const joinSubject = async (subjectCode,subjectName) => await API.patch(`/subjects/join`,{subjectCode, subjectName});
+export const findOne = async (id) => await API.get(`/subject/${id}`);

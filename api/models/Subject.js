@@ -21,7 +21,6 @@ const subjectSchema = new mongoose.Schema({
         type:String,
         unique:true
     }
-    
     })
     const Subject = mongoose.model("Subject",subjectSchema);
     export default Subject;
