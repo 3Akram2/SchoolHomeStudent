@@ -18,7 +18,7 @@ import path from 'path';
 const app = express();
 app.use(cors({
     credentials: true,
-    origin: 'http://localhost:3000',  // Update with your client's origin
+    origin: 'http://localhost:3000', 
 }))
 
 app.use(cookieParser())

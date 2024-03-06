@@ -91,13 +91,13 @@ function TeacherSignup() {
     setConfirmPassword("");
   };
   const handleChange = async () => {
-    if (!Fname || !Lname || !email || !phone || !password || !confirmPassword) {
+    if (!Fname || !Lname || !email  || !password || !confirmPassword) {
       // Show an alert for empty required fields
       alert("All required fields must be filled.");
       return;
     }
     // Perform validation checks
-    if (emailError || PassError || phoneError) {
+    if (emailError || PassError ) {
       // Show an alert for validation errors
       alert("Validation failed. Please check the form for errors.");
       return;
@@ -113,7 +113,6 @@ function TeacherSignup() {
         fName: Fname.trim().charAt(0).toUpperCase() + Fname.trim().slice(1),
         lName: Lname.trim().charAt(0).toUpperCase() + Lname.trim().slice(1),
         email: email.trim(),
-        phoneNumber: phone.trim(),
         uid: firebaseRes.user.uid,
       };
       // Additional logic or actions after successful registration
@@ -163,7 +162,7 @@ function TeacherSignup() {
         }}
       >
         <DialogTitle sx={{ color: "primary.main", fontWeight: "bolder" }}>
-          ADD CHILD
+          ADD Teacher
         </DialogTitle>
         <DialogContent>
           <Grid container>
@@ -242,35 +241,6 @@ function TeacherSignup() {
                   sx={{ display: "block" }}
                 >
                   Invalid email address
-                </Typography>
-              )}
-            </Grid>
-            <Grid item xs={12}>
-              <Typography className="label">Phone Number</Typography>
-              <TextField
-                required
-                id="phone-number"
-                style={{ width: "80%", padding: "7px" }}
-                type="text"
-                sx={{
-                  input: {
-                    color: "common.black",
-                    backgroundColor: "white",
-                    margin: "5px",
-                    height: "2px",
-                  },
-                }}
-                value={phone}
-                onChange={handlePhoneChange}
-                error={phoneError}
-              />
-              {phoneError && (
-                <Typography
-                  variant="caption"
-                  color="error"
-                  sx={{ display: "block" }}
-                >
-                  enter valid phone number (11 numbers )
                 </Typography>
               )}
             </Grid>

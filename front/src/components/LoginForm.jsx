@@ -60,7 +60,6 @@ function LoginForm() {
       const token = await logUser.user.getIdToken();
       const res = await logIn(token);
       dispatch(setCredentials({ ...res.data.user }));
-      console.log("User role:", res.data.user.role);
       if (res.data.user.role === "admin") {
         await navigate("/admin/dashboard");
         console.log("dashboard navigated");

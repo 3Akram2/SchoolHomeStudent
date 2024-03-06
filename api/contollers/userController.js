@@ -21,7 +21,7 @@ const updateProfile = async (req,res) => {
 }
 const addChild = async (req, res) => {
   const parentId = req.user.userID;
-  const { fName, lName, email, phoneNumber, uid } = req.body;
+  const { fName, lName, email, uid } = req.body;
   try {
     const existingUser = await User.findOne({ email }).populate('children parent teachers subjects');
     if (existingUser) {
@@ -33,7 +33,6 @@ const addChild = async (req, res) => {
       uid,
       name: fName + " " + lName,
       email,
-      phoneNumber,
       type: "student",
       role: 'user',
       parent: parentId 
@@ -67,7 +66,7 @@ try {
 }
 const addTeacher = async (req,res)=> {
   const schoolId = req.user.userID;
-  const {fName , lName ,email, phoneNumber ,uid} = req.body;
+  const {fName , lName ,email ,uid} = req.body;
   try {
       const existingUser = await User.findOne({ email });
       if (existingUser) {
@@ -82,7 +81,6 @@ const addTeacher = async (req,res)=> {
         uid,
         name:fName +" "+ lName,
         email,
-        phoneNumber,
         type:"teacher",
         role:'user',
         parent:schoolId,

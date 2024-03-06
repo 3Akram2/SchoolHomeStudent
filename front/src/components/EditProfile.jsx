@@ -72,7 +72,7 @@ function DialogForm() {
     setPhoneError(!phoneRegex.test(newPhone));
   };
   const handleChange = async () => {
-    if (!name || !phone) {
+    if (!name) {
       // Show an alert for empty required fields
       alert("All required fields must be filled.");
       return;
@@ -87,7 +87,7 @@ function DialogForm() {
       const updateUser = {
         _id: userInfo._id,
         name: name,
-        phoneNumber: phone,
+        phoneNumber: phone || '' ,
       };
       console.log(updateUser, "<=====");
       const res = await updateProfile(updateUser, imageFile);
