@@ -91,11 +91,13 @@ function Subject({
           <Grid item md={5}>
             <Typography variant="h6">Students Count: {studentCount}</Typography>
           </Grid>
-          <Grid item md={2}>
+          {userInfo.type === 'teacher' || userInfo.type === 'school' ?
+           <Grid item md={2}>  
             <IconButton variant="outlined" sx={{backgroundColor:'primary.main'}} onClick={openSubject}>
             <MoreIcon/>
             </IconButton>
-          </Grid>
+          </Grid>:''}
+          
         </Grid>
       </Paper>
     </Grid>

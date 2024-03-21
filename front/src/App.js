@@ -20,6 +20,7 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import SubjectPage from "./pages/SubjectPage";
 import SubjectView from "./pages/SubjectView";
+import {updateFcm} from './axios/requests'
 
 const theme = createTheme({
   palette: {
@@ -34,16 +35,42 @@ const theme = createTheme({
 function App() {
   const { userInfo } = useSelector((state) => state.auth);
   useEffect(() => {
-    if (userInfo) {
-      generateToken();
-      onMessage(messaging, (payload) => {
-        console.log(payload);
-        toast(payload?.notification.title, {
-          className: "golden-progress-bar",
-        });
-      });
-    }
+    const updateFcmToken = async (fcm) => {
+      await updateFcm(fcm);
+    };
+  
+    const createFcm = async () => {
+      const fcm = await generateToken();
+      console.log('Generated FCM token:', fcm);
+      return fcm;
+    };
+  
+    const fetchData = async () => {
+      try {
+        if (userInfo) {
+          const fcm = await createFcm();
+          console.log('FCM token after creation:', fcm);
+  
+          // Update FCM token in backend
+          await updateFcmToken(fcm);
+          console.log('FCM token updated in backend:', fcm);
+  
+          // Subscribe to FCM messages
+          onMessage(messaging, (payload) => {
+            console.log('Received FCM message:', payload);
+            toast(payload?.notification.title, {
+              className: 'golden-progress-bar',
+            });
+          });
+        }
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    };
+  
+    fetchData();
   }, [userInfo]);
+  
   return (
     <div>
       <ToastContainer

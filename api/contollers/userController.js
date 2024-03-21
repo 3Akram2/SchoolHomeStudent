@@ -98,10 +98,32 @@ const addTeacher = async (req,res)=> {
       throw error; // Rethrow the error to be handled by the caller
     }
   }
+  const updateFcm = async (req, res) => {
+    const userId = req.user.userID;
+    const fcm = req.body.fcm;
+    
+    try {
+        // Find the user by userId
+        const user = await User.findById(userId);
+        
+        if (!user) {
+            return res.status(404).json({ message: "User not found" });
+        }
+
+        // Update the user's FCM token
+        user.fcmToken = fcm;
+        await user.save();
+        return res.status(200).json({ message: "FCM token updated successfully" });
+    } catch (error) {
+        console.error('Error updating FCM token:', error);
+        return res.status(500).json({ message: "Internal server error" });
+    }
+};
 export {
     updateProfile,
     addChild,
     viewProfile,
-    addTeacher
+    addTeacher,
+    updateFcm
 }
 

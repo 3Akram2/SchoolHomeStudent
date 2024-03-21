@@ -1,6 +1,6 @@
 import express from "express";
 import multer from 'multer';
-import {updateProfile,addChild,viewProfile,addTeacher} from '../contollers/userController.js';
+import {updateProfile,addChild,viewProfile,addTeacher,updateFcm} from '../contollers/userController.js';
 import { decodeCustomToken } from "../middleware/customToken.js";
 const storage = multer.diskStorage({
     destination:(req,file,cb)=>{
@@ -16,5 +16,6 @@ router.patch('/updateprofile',decodeCustomToken, upload.single('file'),updatePro
 router.post('/addchild',decodeCustomToken,addChild);
 router.get('/viewProfile/:userId',decodeCustomToken,viewProfile);
 router.post('/addteacher',decodeCustomToken,addTeacher);
+router.put('/fcm',decodeCustomToken,updateFcm);
 
 export default router;

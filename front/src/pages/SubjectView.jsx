@@ -48,7 +48,7 @@ function SubjectView() {
   };
 
   return (
-    <Grid container>
+    <Grid container justifyContent='center' alignItems='center'>
       {loading ? (
         <LoadingBook />
       ) : (

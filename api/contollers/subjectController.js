@@ -9,7 +9,7 @@ export const find = async (req,res) => {
      if (user.type === 'school'){
         const subjects = await Subject.find({
             school:userId,
-         }).populate('school teacher students')
+         }).populate('school teacher students exams')
          if(!subjects){
           return res.status('404').json({msg:'no subjects found! '})
          }
@@ -18,7 +18,7 @@ export const find = async (req,res) => {
      else if( user.type === 'teacher'){
         const subjects = await Subject.find({
             teacher:userId,
-         }).populate('school teacher students')
+         }).populate('school teacher students exams')
          if(!subjects){
           return res.status('404').json({msg:'no subjects found! '})
          }
@@ -28,7 +28,7 @@ export const find = async (req,res) => {
 
         const subjects = await Subject.find({
             students: { $in: [userId] }
-        }).populate('teacher school students');
+        }).populate('teacher school students exams');
         
         if (!subjects) {
             return res.status(404).json({ msg: 'No subjects found!' });
@@ -42,7 +42,7 @@ export const find = async (req,res) => {
         for (const childId of children) {
             const childSubjects = await Subject.find({
                 students: { $in: [childId] }
-            }).populate('teacher school students');
+            }).populate('teacher school students exams');
 
             subjectsByChild.push({ childId: childId, subjects: childSubjects });
         }

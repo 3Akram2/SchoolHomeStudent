@@ -20,7 +20,11 @@ const subjectSchema = new mongoose.Schema({
     code:{
         type:String,
         unique:true
-    }
+    },
+    exams: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Exam'
+    }]
     })
     const Subject = mongoose.model("Subject",subjectSchema);
     export default Subject;

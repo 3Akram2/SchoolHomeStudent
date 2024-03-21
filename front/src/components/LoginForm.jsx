@@ -56,7 +56,6 @@ function LoginForm() {
   const handleLogin = async () => {
     try {
       const logUser = await signInWithEmailAndPassword(auth, email, password);
-      alert("User has been logged in successfully");
       const token = await logUser.user.getIdToken();
       const res = await logIn(token);
       dispatch(setCredentials({ ...res.data.user }));

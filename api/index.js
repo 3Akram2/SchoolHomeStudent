@@ -10,8 +10,10 @@ import authRoutes from './routes/authRoutes.js';
 import subjectRoutes from './routes/subjectRoutes.js';
 import userRoutes from './routes/userRoutes.js';
 import adminRoutes from './routes/adminRoutes.js';
+import examRoutes from './routes/examRoutes.js'
 import admin from './config/firebase-config.js';
 import path from 'path';
+import notificationJob from './cronJob.js'
 
 
 
@@ -37,9 +39,10 @@ app.use('/auth',authRoutes)
 app.use('/user',userRoutes)
 app.use('/admin',adminRoutes)
 app.use(subjectRoutes)
+app.use('/exam',examRoutes)
 
 const db = admin.firestore();
-
+notificationJob.start()
 // const message = {
 //     notification: {
 //       title: 'Upcoming Exam 2',
@@ -59,8 +62,8 @@ const db = admin.firestore();
 //   try {
 //     const docRef = await db.collection('notifications').add({
 //       // Document data
-//       title: 'title',
-//       body: 'body',
+//       title: 'noot 3',
+//       body: 'not body 3',
 //       uid:'QUyTTEeDx8OZRhxz5KC7zLrdo2c2',
 //       time:Date.now()
 //       // Add more fields as needed
@@ -71,6 +74,13 @@ const db = admin.firestore();
 //   }
 // };
 // addDocumentToFirestore();
+
+
+
+
+
+
+
 
 app.get('/',(req,res)=>{
 

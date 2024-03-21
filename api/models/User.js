@@ -43,7 +43,11 @@ const userSchema = new mongoose.Schema({
     teachers: [{
             type: mongoose.Schema.Types.ObjectId,
             ref: 'User',
-    }],    
+    }],   
+    fcmToken:{
+        type:String,
+        default:''
+    } 
     })
     const User = mongoose.model("User",userSchema);
     export default User;
