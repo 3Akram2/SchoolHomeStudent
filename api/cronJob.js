@@ -48,10 +48,16 @@ const job = new CronJob(
             
           });
         }
+        if (currentDateWithoutTime > examDateWithoutTime && exam.status !== 'ended'){
+          await Exam.findByIdAndUpdate(exam._id, { status: 'ended' });
+          console.log('Exam Status Updated to "ended"');
+        }
+
       });
     } catch (error) {
       console.error('Error querying exams:', error);
     }
+
   },
   null,
   'Europe/London' // Set time zone to London, UK

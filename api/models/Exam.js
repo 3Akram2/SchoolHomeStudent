@@ -22,7 +22,7 @@ const examSchema = new mongoose.Schema({
     },
     status: {
         type: String,
-        enum: ['active', 'inactive', 'upcoming'],
+        enum: ['active', 'inactive', 'upcoming','ended'],
         default: 'upcoming'
     },
     type: {

@@ -17,18 +17,45 @@ export const find = async (req,res) => {
      }
      else if( user.type === 'teacher'){
         const subjects = await Subject.find({
-            teacher:userId,
-         }).populate('school teacher students exams')
-         if(!subjects){
-          return res.status('404').json({msg:'no subjects found! '})
-         }
-         res.status(200).json({subjects:subjects})
+            teacher: userId,
+          }).populate({
+            path: 'students',
+            populate: { path: 'parent', model: 'User' }
+        })
+        .populate({
+            path: 'results',
+            populate: [
+                { path: 'exam', model: 'Exam' },
+                { path: 'student', model: 'User' }
+            ]
+        })
+        .populate('school teacher exams');
+      
+          if (!subjects || subjects.length === 0) {
+            return res.status(404).json({ msg: 'No subjects found!' });
+          }
+          // Sending the populated subjects to the client
+
+          res.status(200).json({ subjects });
+
+        
      }
      else if( user.type === 'student'){
 
         const subjects = await Subject.find({
             students: { $in: [userId] }
-        }).populate('teacher school students exams');
+        }).populate({
+            path: 'students',
+            populate: { path: 'parent', model: 'User' }
+        })
+        .populate({
+            path: 'results',
+            populate: [
+                { path: 'exam', model: 'Exam' },
+                { path: 'student', model: 'User' }
+            ]
+        })
+        .populate('school teacher exams');
         
         if (!subjects) {
             return res.status(404).json({ msg: 'No subjects found!' });
@@ -42,11 +69,21 @@ export const find = async (req,res) => {
         for (const childId of children) {
             const childSubjects = await Subject.find({
                 students: { $in: [childId] }
-            }).populate('teacher school students exams');
+            }).populate({
+                path: 'students',
+                populate: { path: 'parent', model: 'User' }
+            })
+            .populate({
+                path: 'results',
+                populate: [
+                    { path: 'exam', model: 'Exam' },
+                    { path: 'student', model: 'User' }
+                ]
+            })
+            .populate('school teacher exams');
 
             subjectsByChild.push({ childId: childId, subjects: childSubjects });
         }
-
         res.status(200).json({ subjects: subjectsByChild });
      }
     } catch (error) {
@@ -179,6 +216,45 @@ export const joinSubject = async (req,res) => {
         res.status(400).json({msg:'Somthing went wrong!'})
     }
 }
+export const editResults = async (req, res) => {
+    const { subjectId, resultId, score } = req.body;
+    try {
+        const subject = await Subject.findById(subjectId).populate({
+            path: 'students',
+            populate: { path: 'parent', model: 'User' }
+        })
+        .populate({
+            path: 'results',
+            populate: [
+                { path: 'exam', model: 'Exam' },
+                { path: 'student', model: 'User' }
+            ]
+        })
+        .populate('school teacher exams');
+        if (!subject) {
+            return res.status(404).json({ msg: 'Subject not found!' });
+        }
+        
+        // Find the index of the result in the array
+        const resultIndex = subject.results.findIndex(result => result._id.toString() === resultId);
+        
+        if (resultIndex === -1) {
+            return res.status(404).json({ msg: 'Result not found!' });
+        }
+
+        // Update the score of the result
+        subject.results[resultIndex].score = score;
+
+        // Save the changes to the subject
+        await subject.save();
+        
+        res.status(200).json({ subject: subject });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ msg: 'Internal server error' });
+    }
+};
+
 
 const generateSubjectCode = async () => {
     let alreadyInUseCode;

@@ -11,7 +11,9 @@ const storage = multer.diskStorage({
     }
 });
 const upload = multer({ storage: storage });
+
 const router = express.Router();
+//  localhowt3002/user/updateprofile
 router.patch('/updateprofile',decodeCustomToken, upload.single('file'),updateProfile);
 router.post('/addchild',decodeCustomToken,addChild);
 router.get('/viewProfile/:userId',decodeCustomToken,viewProfile);

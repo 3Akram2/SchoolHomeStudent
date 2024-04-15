@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-
+import  Email  from "./Mail.js";
 
 const userSchema = new mongoose.Schema({
     uid:{
@@ -47,7 +47,9 @@ const userSchema = new mongoose.Schema({
     fcmToken:{
         type:String,
         default:''
-    } 
+    }, 
+    sentEmails: [Email], // Array of sent emails
+    receivedEmails: [Email] // Array of received emails
     })
     const User = mongoose.model("User",userSchema);
     export default User;

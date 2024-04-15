@@ -42,7 +42,13 @@ export const deleteSubject = async (id) => await API.delete(`/subject/${id}`);
 export const editSubject = async (id,name) => await API.patch(`/subject/${id}`,{name,});
 export const joinSubject = async (subjectCode,subjectName) => await API.patch(`/subjects/join`,{subjectCode, subjectName});
 export const findOne = async (id) => await API.get(`/subject/${id}`);
+export const editResults = async (subjectId,resultId,score)=>await API.put('/subject/results',{subjectId,resultId,score})
+// /subject/results
 
 export const addExam = async (exam, subjectId) => await API.post('/exam',{exam,subjectId});
 export const editExam = async (exam, examId, subjectId) => await API.patch(`/exam/${examId}/${subjectId}`,{exam});
 export const deleteExam = async (examId, subjectId) => await API.delete(`/exam/${subjectId}/${examId}`);
+
+export const sendEmail = async (mail) => await API.post('/mail/send',mail);
+export const getSentMail = async () => await API.get('/mail/sent');
+export const getReceviedMail = async () => await API.get('/mail/received');

@@ -11,6 +11,7 @@ import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
+import Mail from "./Mail";
 import { Link as RouterLink, useNavigate } from "react-router-dom";
 import Notifications from "./Notifications";
 import { signOut } from "firebase/auth";
@@ -165,7 +166,9 @@ function ResponsiveAppBar() {
           </Box>
           {userInfo ? (
             <Box sx={{ flexGrow: 0, display: "flex" }}>
+             {userInfo.type === 'student'? '':<Mail/>}
               <Notifications />
+              
               <Tooltip title="Open settings">
                 <IconButton onClick={handleOpenUserMenu} sx={{ p: 1 }}>
                   {userInfo?.profilePicUrl ? (

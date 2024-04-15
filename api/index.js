@@ -11,10 +11,9 @@ import subjectRoutes from './routes/subjectRoutes.js';
 import userRoutes from './routes/userRoutes.js';
 import adminRoutes from './routes/adminRoutes.js';
 import examRoutes from './routes/examRoutes.js'
-import admin from './config/firebase-config.js';
 import path from 'path';
 import notificationJob from './cronJob.js'
-
+import mailRoutes from './routes/mailRoutes.js'
 
 
 const app = express();
@@ -40,8 +39,9 @@ app.use('/user',userRoutes)
 app.use('/admin',adminRoutes)
 app.use(subjectRoutes)
 app.use('/exam',examRoutes)
+app.use('/mail',mailRoutes)
 
-const db = admin.firestore();
+
 notificationJob.start()
 // const message = {
 //     notification: {
