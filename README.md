@@ -27,13 +27,13 @@ npm install
 npm  start
 ```
 ## Additional Notes
-Ensure you have Node.js installed on your machine.
-Make sure to replace <repository-url> with the actual URL of your repository.
-The API and frontend servers should now be running. You can access the application by navigating to the appropriate URL in your browser.
+- Ensure you have Node.js installed on your machine.
+- Make sure to replace <repository-url> with the actual URL of your repository.
+- The API and frontend servers should now be running. You can access the application by navigating to the appropriate URL in your browser.
 
 ## Features
-Student Dashboard: Students can view their exam schedules and marks.
-Parent Dashboard: Parents can monitor their children's academic progress.
-Teacher Dashboard: Teachers can add marks, create exams, and send reminders.
-Exam Reminders: Automatic notifications for upcoming exams.
-Internal Mailing System: Allows communication between parents and teachers.
+- Student Dashboard: Students can view their exam schedules and marks.
+- Parent Dashboard: Parents can monitor their children's academic progress.
+- Teacher Dashboard: Teachers can add marks, create exams, and send reminders.
+- Exam Reminders: Automatic notifications for upcoming exams.
+- Internal Mailing System: Allows communication between parents and teachers.
